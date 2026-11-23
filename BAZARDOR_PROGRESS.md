@@ -295,6 +295,37 @@ Test results:
 Remaining tasks:
 - External: deploy with real environment variables and replace the live-link placeholder in `README.md`.
 
+### Phase 9 — Logged-in navbar dropdown
+Status: COMPLETE
+
+Completed tasks:
+- Inspected the existing `Navbar`, `AuthNavActions`, BetterAuth session hook, toast provider, and the Penpot `Home - User Menu Open` frame before editing.
+- Reused `AuthNavActions` instead of creating a second navbar/auth component; kept category navigation, price ticker, sign-in/sign-up styling, and navigation behavior unchanged.
+- Replaced the logged-in profile/sign-out buttons with a ghost user trigger showing the actual `session.user.name`, with email as the fallback when the name is unavailable.
+- Extracted the previous profile avatar logic into a shared `UserAvatar` component so the navbar and profile page use one validated image/fallback implementation.
+- Added the Penpot-matched dropdown: 256px card, 16px radius, 9px padding, inset `#e1e8e1` border, layered shadows, name/email header, 33px menu rows, and `z-50` layering above page content.
+- Wired **আমার প্রোফাইল** to `/profile` and **সাইন আউট** to the existing BetterAuth `signOut()` flow with success toast, homepage redirect, and session-driven return to the auth buttons.
+- Added open-on-click, close-on-outside-click, close-on-Escape, close-after-selection, and no-navigation-on-open behavior.
+- Added a subtle 140ms opening animation with a reduced-motion fallback.
+- Kept the dropdown usable at 375px and 1440px with a truncated user name and viewport-bounded menu width.
+
+Changed files:
+- `src/components/AuthNavActions.tsx`
+- `src/components/UserAvatar.tsx` (new shared component)
+- `src/app/profile/page.tsx`
+- `src/app/globals.css`
+- `BAZARDOR_PROGRESS.md`
+
+Test results:
+- `npx tsc --noEmit`: **PASS**
+- `npm run lint`: **PASS**
+- `npm run build`: **PASS** — 10 routes generated.
+- Browser smoke test with mocked BetterAuth session responses: **10/10 PASS** — logged-out buttons, session name, open without navigation, outside click, Escape, profile navigation, sign-out/toast/redirect, refresh persistence, and 375px/1440px viewport fit.
+- No environment file was read or modified; no unrelated page was changed.
+
+Remaining tasks:
+- External: deploy with real environment variables and replace the live-link placeholder in `README.md`.
+
 ## Safety notes
 - `.env.local` must never be modified.
 - No secret values are recorded in this report.
