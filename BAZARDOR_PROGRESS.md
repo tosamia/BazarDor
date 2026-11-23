@@ -267,6 +267,34 @@ Test results:
 Remaining tasks:
 - External: deploy with real environment variables and replace the live-link placeholder in `README.md`.
 
+### Phase 8 — Dynamic profile avatar
+Status: COMPLETE
+
+Completed tasks:
+- Confirmed the existing BetterAuth configuration uses the default user model, so the authenticated `session.user.image` field is the available profile-photo source; no upload feature exists in this project.
+- Replaced the hardcoded design photo with a `ProfileAvatar` component driven by `session.user.image`.
+- Added URL validation so only safe `http(s)` or root-relative image URLs are rendered; invalid, empty, or missing values show a circular Lucide `User` placeholder.
+- Added an image error fallback so a broken or unreachable photo URL automatically switches to the same placeholder.
+- Used a circular, overflow-hidden 64px/70px responsive container with `object-cover` cropping, and updated the loading skeleton to match.
+- Removed the hardcoded `public/profile-avatar.webp` asset.
+
+Changed files:
+- `src/app/profile/page.tsx`
+- `package.json`
+- `package-lock.json`
+- `public/profile-avatar.webp` (removed)
+- `BAZARDOR_PROGRESS.md`
+
+Test results:
+- `npx tsc --noEmit`: **PASS**
+- `npm run lint`: **PASS**
+- `npm run build`: **PASS** — 10 routes generated.
+- No authentication, profile-update, or sign-out logic was changed; no unrelated page was modified.
+- No secrets were read, printed, modified, or committed.
+
+Remaining tasks:
+- External: deploy with real environment variables and replace the live-link placeholder in `README.md`.
+
 ## Safety notes
 - `.env.local` must never be modified.
 - No secret values are recorded in this report.

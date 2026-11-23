@@ -2,10 +2,65 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { User } from "lucide-react";
 import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
+
+function getSafeImageUrl(value: string | null | undefined): string | null {
+  const trimmed = value?.trim();
+  if (!trimmed) return null;
+
+  if (trimmed.startsWith("/") && !trimmed.startsWith("//")) {
+    return trimmed;
+  }
+
+  try {
+    const url = new URL(trimmed);
+    return url.protocol === "http:" || url.protocol === "https:"
+      ? url.toString()
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+function ProfileAvatar({
+  image,
+  name,
+}: {
+  image?: string | null;
+  name: string;
+}) {
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const src = getSafeImageUrl(image);
+  const showImage = src !== null && failedSrc !== src;
+
+  return (
+    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full bg-[#e8f3ea] ring-1 ring-inset ring-[#d7e6d9] sm:h-[70px] sm:w-[70px]">
+      {showImage ? (
+        <Image
+          src={src}
+          alt={`${name}-এর প্রোফাইল ছবি`}
+          fill
+          unoptimized
+          sizes="70px"
+          className="object-cover"
+          onError={() => setFailedSrc(src)}
+        />
+      ) : (
+        <span
+          role="img"
+          aria-label={`${name}-এর প্রোফাইল ছবি`}
+          className="flex h-full w-full items-center justify-center text-[#05893e]"
+        >
+          <User size={30} strokeWidth={1.75} aria-hidden="true" />
+        </span>
+      )}
+    </div>
+  );
+}
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -40,7 +95,7 @@ export default function ProfilePage() {
 
             <div className="h-[120px] rounded-2xl bg-[#fafcfa] ring-1 ring-inset ring-[#e1e8e1] p-[25px]">
               <div className="flex items-center gap-4">
-                <div className="h-[70px] w-20 shrink-0 rounded-2xl bg-gray-200" />
+                <div className="h-16 w-16 shrink-0 animate-pulse rounded-full bg-gray-200 sm:h-[70px] sm:w-[70px]" />
                 <div className="min-w-0 flex-1 space-y-3">
                   <div className="h-6 w-40 rounded bg-gray-200" />
                   <div className="h-5 w-56 rounded bg-gray-200" />
@@ -81,15 +136,7 @@ export default function ProfilePage() {
           </header>
 
           <section className="flex w-full min-w-0 flex-col gap-4 rounded-2xl bg-[#fafcfa] ring-1 ring-inset ring-[#e1e8e1] p-[25px] sm:flex-row sm:items-center">
-            <div className="relative h-[70px] w-20 shrink-0 overflow-hidden rounded-2xl bg-[#05893e]">
-              <Image
-                src="/profile-avatar.webp"
-                alt={`${displayName}-এর প্রোফাইল ছবি`}
-                fill
-                sizes="80px"
-                className="object-cover"
-              />
-            </div>
+            <ProfileAvatar image={session.user.image} name={displayName} />
 
             <div className="min-w-0 flex-1">
               <p
