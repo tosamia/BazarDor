@@ -240,6 +240,33 @@ Remaining tasks:
 - External: deploy the repository to Vercel (or another Next.js-compatible host) with real environment variables, then replace the live-link placeholder in `README.md` and paste the live link into the submission form.
 - No local implementation tasks remain.
 
+### Phase 7 — Profile page design fidelity
+Status: COMPLETE
+
+Completed tasks:
+- Inspected the original Penpot `Profile` frame (1440×1047) and extracted its object geometry, fills, inner strokes, radii, shadows, and typography before editing.
+- Rebuilt only `src/app/profile/page.tsx` to match the frame: 768px centered stack, 24/16px stack padding, 24px gaps, white canvas, `#fafcfa` cards with 1px inset `#e1e8e1` strokes, 16px card radii, 8px control radii, and the exact 120px/251px card heights.
+- Reproduced the designed header, avatar/name/email row, red outline sign-out button, `তথ্য` form card, green `আপডেট` button, and extracted avatar image asset.
+- Kept all behavior intact: `authClient.useSession()`, callback-aware protected redirect, `authClient.signOut()` with toast, `session.user.name`, `session.user.email`, and `/profile/update` navigation.
+- Added truncation and `min-w-0` guards so long names/emails cannot cause horizontal scrolling.
+
+Changed files:
+- `src/app/profile/page.tsx`
+- `public/profile-avatar.webp`
+- `BAZARDOR_PROGRESS.md`
+
+Test results:
+- `npx tsc --noEmit`: **PASS**
+- `npm run lint`: **PASS**
+- `npm run build`: **PASS** — 10 routes generated; no blocking-prerender warning.
+- Production `next start` smoke test at `http://localhost:3101`: `/profile`, `/profile/update`, and `/` → HTTP 200 with all expected design classes and dynamic-auth source checks passing.
+- CDP browser measurement at exact 375px, 768px, and 1440px viewports: `documentElement.scrollWidth === clientWidth` at every width (no horizontal scrolling).
+- At 1440px, measured geometry matched the source frame: header `352,279 736×52`, profile row `352,355 736×120`, info card `352,499 736×251`, and footer start `y=978`; canvas `rgb(255,255,255)` and cards `rgb(250,252,250)`.
+- No secrets were read, printed, modified, or committed; the isolated test copy still has no `.env.local`.
+
+Remaining tasks:
+- External: deploy with real environment variables and replace the live-link placeholder in `README.md`.
+
 ## Safety notes
 - `.env.local` must never be modified.
 - No secret values are recorded in this report.

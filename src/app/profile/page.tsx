@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
@@ -29,104 +30,118 @@ export default function ProfilePage() {
 
   if (isPending || !session) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#f0f5f0] px-4 py-10">
-        <div className="w-full max-w-[768px] animate-pulse rounded-2xl border border-[#e1e8e1] bg-white p-6 sm:p-8">
-          <div className="h-4 w-32 rounded bg-gray-200" />
-          <div className="mt-8 flex items-center gap-4">
-            <div className="h-14 w-14 rounded-full bg-gray-200" />
-            <div className="flex-1 space-y-3">
-              <div className="h-6 w-40 rounded bg-gray-200" />
-              <div className="h-4 w-56 rounded bg-gray-200" />
+      <main className="w-full overflow-x-hidden bg-white pt-[100px] pb-[204px]">
+        <div className="mx-auto w-full max-w-[768px] animate-pulse px-4">
+          <div className="flex flex-col gap-6 py-6">
+            <div>
+              <div className="h-8 w-48 rounded bg-gray-200" />
+              <div className="mt-1 h-5 w-72 rounded bg-gray-200" />
             </div>
-          </div>
-          <div className="mt-8 space-y-4 border-t border-gray-100 pt-6">
-            <div className="h-12 rounded-lg bg-gray-100" />
-            <div className="h-12 rounded-lg bg-gray-100" />
-            <div className="h-12 rounded-lg bg-gray-200" />
+
+            <div className="h-[120px] rounded-2xl bg-[#fafcfa] ring-1 ring-inset ring-[#e1e8e1] p-[25px]">
+              <div className="flex items-center gap-4">
+                <div className="h-[70px] w-20 shrink-0 rounded-2xl bg-gray-200" />
+                <div className="min-w-0 flex-1 space-y-3">
+                  <div className="h-6 w-40 rounded bg-gray-200" />
+                  <div className="h-5 w-56 rounded bg-gray-200" />
+                </div>
+                <div className="hidden h-10 w-[118px] rounded-lg bg-gray-200 sm:block" />
+              </div>
+            </div>
+
+            <div className="h-[251px] rounded-2xl bg-[#fafcfa] ring-1 ring-inset ring-[#e1e8e1] p-[21px]">
+              <div className="h-7 w-16 rounded bg-gray-200" />
+              <div className="mt-4 space-y-4">
+                <div className="h-5 w-12 rounded bg-gray-200" />
+                <div className="h-10 w-full rounded-lg bg-gray-200" />
+                <div className="h-10 w-full rounded-lg bg-gray-300" />
+              </div>
+            </div>
           </div>
         </div>
       </main>
     );
   }
 
+  const displayName =
+    session.user.name?.trim() || session.user.email || "ব্যবহারকারী";
+  const displayEmail = session.user.email || "ইমেইল পাওয়া যায়নি";
+
   return (
-    <main className="min-h-screen bg-[#f0f5f0] px-4 py-10 sm:py-14">
-      <div className="mx-auto max-w-[768px] rounded-2xl border border-[#e1e8e1] bg-white p-6 shadow-sm sm:p-8">
-        <Link
-          href="/"
-          className="text-sm text-gray-500 transition hover:text-black"
-        >
-          ← হোম পেজে ফিরে যান
-        </Link>
+    <main className="w-full overflow-x-hidden bg-white pt-[100px] pb-[204px]">
+      <div className="mx-auto w-full max-w-[768px] px-4">
+        <div className="flex flex-col gap-6 py-6">
+          <header className="min-w-0">
+            <h1 className="text-2xl font-bold leading-8 text-[#1d271f]">
+              আমার প্রোফাইল
+            </h1>
+            <p className="mt-0 text-sm leading-5 text-[#1d271f]">
+              আপনার অ্যাকাউন্টের তথ্য এখানে দেখুন।
+            </p>
+          </header>
 
-        <div className="mt-10 border-b border-gray-200 pb-6">
-          <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-gray-200 bg-gray-50 text-xl font-semibold text-gray-700">
-              {session.user.name?.charAt(0).toUpperCase() || "U"}
+          <section className="flex w-full min-w-0 flex-col gap-4 rounded-2xl bg-[#fafcfa] ring-1 ring-inset ring-[#e1e8e1] p-[25px] sm:flex-row sm:items-center">
+            <div className="relative h-[70px] w-20 shrink-0 overflow-hidden rounded-2xl bg-[#05893e]">
+              <Image
+                src="/profile-avatar.webp"
+                alt={`${displayName}-এর প্রোফাইল ছবি`}
+                fill
+                sizes="80px"
+                className="object-cover"
+              />
             </div>
 
-            <div>
-              <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
-                আমার প্রোফাইল
-              </h1>
-              <p className="mt-1 text-sm text-gray-500">
-                আপনার অ্যাকাউন্টের তথ্য পরিচালনা করুন।
+            <div className="min-w-0 flex-1">
+              <p
+                className="truncate text-xl font-normal leading-7 text-[#1d271f]"
+                title={displayName}
+              >
+                {displayName}
+              </p>
+              <p
+                className="mt-1 truncate text-base leading-6 text-[#1d271f]"
+                title={displayEmail}
+              >
+                {displayEmail}
               </p>
             </div>
-          </div>
+
+            <button
+              type="button"
+              onClick={handleSignout}
+              className="flex h-10 w-full shrink-0 items-center justify-center gap-1.5 rounded-lg border border-[#d03739] px-[17px] text-sm font-semibold text-[#d03739] transition hover:bg-red-50 sm:w-auto"
+            >
+              <span aria-hidden="true">↩</span>
+              <span>সাইন আউট</span>
+            </button>
+          </section>
+
+          <section className="w-full min-w-0 rounded-2xl bg-[#fafcfa] ring-1 ring-inset ring-[#e1e8e1] p-[21px]">
+            <h2 className="text-lg font-semibold leading-7 text-[#1d271f]">
+              তথ্য
+            </h2>
+
+            <div className="mt-3 p-6">
+              <div>
+                <p className="mb-1 text-sm font-medium leading-[21px] text-[#1d271f]">
+                  নাম
+                </p>
+                <div className="flex h-10 w-full items-center rounded-lg border border-[#e1e8e1] bg-[#fafcfa] px-[13px] text-sm leading-5 text-[#1d271f] shadow-[inset_0_-1px_0_rgba(255,255,255,0.1),inset_0_1px_0_rgba(29,39,31,0.02)]">
+                  <span className="truncate" title={displayName}>
+                    {displayName}
+                  </span>
+                </div>
+              </div>
+
+              <Link
+                href="/profile/update"
+                className="mt-4 flex h-10 w-full items-center justify-center rounded-lg border border-[#047f39] bg-[#05893e] px-4 text-sm font-semibold text-[#f3fbf4] shadow-[0_4px_3px_-2px_rgba(5,137,62,0.3),0_3px_2px_-2px_rgba(5,137,62,0.3),inset_0_0.5px_0.5px_rgba(255,255,255,0.06)] transition hover:bg-[#047a34]"
+              >
+                আপডেট
+              </Link>
+            </div>
+          </section>
         </div>
-
-        <section className="py-7">
-          <h2 className="text-sm font-semibold text-gray-900">
-            ব্যক্তিগত তথ্য
-          </h2>
-
-          <div className="mt-5 space-y-5">
-            <div>
-              <p className="mb-2 block text-sm font-medium text-gray-700">
-                আপনার নাম
-              </p>
-              <div className="flex h-12 items-center rounded-md border border-gray-200 bg-gray-50 px-4 text-sm text-gray-900">
-                {session.user.name || "নাম সেট করা হয়নি"}
-              </div>
-            </div>
-
-            <div>
-              <p className="mb-2 block text-sm font-medium text-gray-700">
-                ইমেইল ঠিকানা
-              </p>
-              <div className="flex h-12 items-center rounded-md border border-gray-200 bg-gray-50 px-4 text-sm text-gray-500">
-                {session.user.email}
-              </div>
-              <p className="mt-2 text-xs text-gray-400">
-                ইমেইল ঠিকানা পরিবর্তন করা যাবে না।
-              </p>
-            </div>
-          </div>
-
-          <Link
-            href="/profile/update"
-            className="mt-7 flex h-12 w-full items-center justify-center rounded-md bg-gray-900 px-5 text-sm font-medium text-white transition hover:bg-black"
-          >
-            তথ্য হালনাগাদ করুন
-          </Link>
-        </section>
-
-        <section className="border-t border-gray-200 pt-6">
-          <h2 className="text-sm font-semibold text-gray-900">অ্যাকাউন্ট</h2>
-
-          <p className="mt-1 text-sm text-gray-500">
-            আপনার অ্যাকাউন্ট থেকে সাইন আউট করুন।
-          </p>
-
-          <button
-            type="button"
-            onClick={handleSignout}
-            className="mt-4 h-11 w-full rounded-md border border-gray-300 bg-white text-sm font-medium text-gray-700 transition hover:bg-gray-50"
-          >
-            সাইন আউট
-          </button>
-        </section>
       </div>
     </main>
   );
