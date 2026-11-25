@@ -8,9 +8,6 @@ A Bengali-first daily market price dashboard built with Next.js 16. It shows liv
 ![BazarDor Homepage](./screenshots/homepage.png)
 
 Live Link: https://bazar-dor-seven-eosin.vercel.app/
-**Assignment brief:** [`ASSIGNMENT-README.md`](./ASSIGNMENT-README.md)  
-**Phase-by-phase report:** [`BAZARDOR_PROGRESS.md`](./BAZARDOR_PROGRESS.md)
-
 ---
 
 ## Features
